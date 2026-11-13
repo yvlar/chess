@@ -6,7 +6,7 @@
     "x": 0.5,
     "y": 0.9
   },
-  "artStatus": "Original procedural prototype sprites; illustrated HD replacement remains an art-production task.",
+  "artStatus": "Original articulated fantasy sprites with six distinct class silhouettes.",
   "animations": {
     "idle": {
       "row": 0,
@@ -57,6 +57,13 @@
       "frames": 8,
       "frameDuration": 85,
       "loop": false,
+      "events": {}
+    },
+    "guard": {
+      "row": 7,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": true,
       "events": {}
     }
   }

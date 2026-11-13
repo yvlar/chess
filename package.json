@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node tests/game.test.js && node tests/engine.test.js",
+    "test": "node --test tests/game.test.js tests/combat.test.js tests/engine.test.js",
     "build": "node scripts/build.mjs"
   },
   "keywords": [],
