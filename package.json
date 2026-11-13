@@ -1,0 +1,21 @@
+{
+  "name": "grandmaster-battle",
+  "version": "1.0.0",
+  "description": "Canvas 2D animated fantasy chess with chess.js and Stockfish WASM",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/game.test.js && node tests/engine.test.js",
+    "build": "node scripts/build.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0",
+  "type": "module",
+  "dependencies": {
+    "chess.js": "1.4.0",
+    "stockfish": "18.0.5"
+  }
+}

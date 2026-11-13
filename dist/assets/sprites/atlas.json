@@ -1,0 +1,63 @@
+{
+  "frameWidth": 128,
+  "frameHeight": 160,
+  "columns": 8,
+  "anchor": {
+    "x": 0.5,
+    "y": 0.9
+  },
+  "artStatus": "Original procedural prototype sprites; illustrated HD replacement remains an art-production task.",
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 8,
+      "frameDuration": 110,
+      "loop": true,
+      "events": {}
+    },
+    "walk": {
+      "row": 1,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": true,
+      "events": {}
+    },
+    "attack": {
+      "row": 2,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": false,
+      "events": {
+        "4": "impact"
+      }
+    },
+    "hit": {
+      "row": 3,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": false,
+      "events": {}
+    },
+    "death": {
+      "row": 4,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": false,
+      "events": {}
+    },
+    "victory": {
+      "row": 5,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": false,
+      "events": {}
+    },
+    "special": {
+      "row": 6,
+      "frames": 8,
+      "frameDuration": 85,
+      "loop": false,
+      "events": {}
+    }
+  }
+}
