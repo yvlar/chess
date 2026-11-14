@@ -1,8 +1,28 @@
 # Grandmaster Chess — Battle Edition 2D
 
-Jeu d’échecs fantasy sans backend en HTML5, CSS3 et JavaScript, avec rendu Canvas 2D et Stockfish WASM. Distribution prête à héberger dans `dist/`.
+Jeu d’échecs fantasy en HTML5, CSS3 et JavaScript, avec rendu Canvas 2D, Stockfish WASM et mode 1 contre 1 en ligne sans inscription. Le serveur Node sert le jeu et associe automatiquement deux joueurs ; les modes ordinateur et à deux sur le même appareil fonctionnent aussi en hébergement statique.
 
-## Lancer
+## Lancer et jouer en ligne
+
+Avec Node 20+ (aucune installation de dépendances nécessaire pour lancer le jeu livré) :
+
+```sh
+npm start
+```
+
+Ouvrir `http://localhost:8080`, puis cliquer **En ligne**. Le premier joueur attend ; dès qu’un second clique **En ligne** sur le même serveur, la partie commence. Les couleurs sont attribuées au hasard. Aucun compte, salon ou code à saisir. Pour essayer seul, utiliser deux onglets indépendants ouverts directement sur le site, ou deux navigateurs.
+
+Les coups sont validés par le serveur et envoyés aux deux joueurs par Server-Sent Events (SSE). Les horloges de 10 minutes sont communes, démarrent après le premier coup et continuent pendant les animations en ligne. L’analyse, l’annulation et le chargement de positions sont désactivés pendant une partie en ligne. L’export PGN reste disponible.
+
+Un rechargement du même onglet reprend automatiquement la session. Après une déconnexion, le joueur dispose de 30 secondes pour revenir avant de perdre par abandon (le temps de jeu continue). Quitter le mode en ligne ou relancer une recherche abandonne la partie en cours. Les sessions déconnectées sont conservées cinq minutes, puis supprimées.
+
+### Héberger le mode en ligne
+
+Exécuter `npm start` sur **une seule instance Node persistante**, accessible aux deux joueurs. `PORT` (8080 par défaut) et `HOST` (`0.0.0.0` par défaut) sont configurables. En production, utiliser HTTPS devant le serveur. Si un reverse proxy est utilisé, acheminer `/api/*` vers Node, autoriser les connexions SSE longues et désactiver leur buffering ; le serveur envoie `X-Accel-Buffering: no` et `Cache-Control: no-cache, no-transform`.
+
+La file d’attente et les parties sont en mémoire : un redémarrage les efface. Cette version convient à un petit serveur partagé ; plusieurs instances nécessiteraient un stockage et une file communs. Un hébergement statique seul (comme GitHub Pages) ne fournit pas le mode en ligne.
+
+### Jouer uniquement hors ligne réseau (ordinateur / même appareil)
 
 Servir `dist/` par HTTP (les modules et le Worker ne fonctionnent pas via `file://`) :
 
@@ -45,14 +65,16 @@ Les deux camps disposent de 10 minutes. Les horloges démarrent après le premie
 
 ## Construire et vérifier
 
-- `npm test` (Node 20+) : 24 tests, sans installation préalable, utilisant les bibliothèques livrées dans `dist/vendor/`.
+- `npm test` (Node 20+) : 27 tests, sans installation préalable, utilisant les bibliothèques livrées dans `dist/vendor/`.
 - `npm install` puis `npm run build` : copie chess.js 1.4.0 et Stockfish 18.0.5 dans la distribution. Cette étape n’est nécessaire que pour reconstruire les fichiers vendor.
 - `python scripts/create-sprites.py` avec Pillow 10.1+ : régénère les douze PNG, l’atlas et la planche de personnages.
 - `python scripts/package-source.py` : met à jour l’archive source téléchargeable, sans inclure `.git`, les dépendances locales ni l’archive elle-même.
 
-Les tests couvrent les 30 captures de classes différentes, les signatures de mouvement et de son, l’impact à différentes durées de frame, la conservation de la position légale, l’annulation et le passage, les quatre promotions, le roque, la prise en passant dans les deux orientations, les réglages de réduction des effets, les horloges, la sauvegarde, les réponses tardives et le véritable moteur WASM.
+Les tests réseau vérifient le matching automatique, la séparation des camps, les coups illégaux ou dupliqués, la synchronisation, la reconnexion, l’annulation de recherche, l’abandon et les horloges serveur. Ils ouvrent temporairement un port HTTP local.
 
-Contrôle visuel du Canvas effectué à 900 et 360 pixels, ainsi que sur six rencontres représentatives. Les images de prévisualisation proviennent du moteur de rendu du jeu. L’essai complet de l’interface dans Chromium reste à faire : le lancement local est bloqué par la restriction de sockets de l’environnement de développement et l’aperçu distant n’accède pas au serveur local. Les appareils mobiles physiques et l’écoute des effets sonores n’ont pas été vérifiés.
+Les tests couvrent aussi les 30 captures de classes différentes, les signatures de mouvement et de son, l’impact à différentes durées de frame, la conservation de la position légale, l’annulation et le passage, les quatre promotions, le roque, la prise en passant dans les deux orientations, les réglages de réduction des effets, les horloges, la sauvegarde, les réponses tardives et le véritable moteur WASM.
+
+Contrôle visuel du Canvas effectué à 900 et 360 pixels, ainsi que sur six rencontres représentatives. Les images de prévisualisation proviennent du moteur de rendu du jeu. Le parcours en ligne a été vérifié dans deux sessions Chromium distinctes, avec des fenêtres de 1280 et 390 pixels : matching, coup synchronisé, reprise après rechargement et abandon, sans erreur JavaScript. Les appareils mobiles physiques et l’écoute des effets sonores n’ont pas été vérifiés.
 
 Les personnages restent des illustrations vectorielles stylisées rasterisées ; une production artistique fantasy HD et des bruitages enregistrés constitueraient une finition supplémentaire.
 
